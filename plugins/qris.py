@@ -7,13 +7,11 @@ from core.utils import buat_id
 class QRIS(PaymentMethod):
     BATAS_TRANSAKSI = 5_000_000
 
-    def __init__(self, saldo: float = 0):
-        super().__init__("QRIS")
-        self.saldo = saldo
+    def __init__(self, merchant: str = "Kantin Kampus"):
+        super().__init__(f"QRIS {merchant}")
 
     def validasi(self, jumlah: float) -> bool:
-        return jumlah <= self.BATAS_TRANSAKSI and self.saldo >= jumlah
+        return jumlah <= self.BATAS_TRANSAKSI
 
     def bayar(self, jumlah: float) -> str:
-        self.saldo -= jumlah
         return buat_id("QRS")
