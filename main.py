@@ -1,25 +1,18 @@
-from core.base import PaymentMethod
-from plugins.transfer_bank import TransferBank
-
-# Eksperimen A: ABC tidak boleh diinstansiasi langsung
-try:
-    PaymentMethod("uji")
-except TypeError as e:
-    print("Error yang diharapkan:", e)
+from core.protocols import Notifier
+from core.notifiers import ConsoleNotifier, EmailNotifier, WhatsAppNotifier
 
 
-# Eksperimen B: subclass yang belum lengkap (bayar() belum ada)
-class Setengah(PaymentMethod):
-    def validasi(self, jumlah):
-        return True
+class TanpaKirim:
+    """Kelas ini sengaja tidak punya method kirim()."""
 
 
-try:
-    Setengah("uji")
-except TypeError as e:
-    print("Error yang diharapkan:", e)
+daftar = [
+    ConsoleNotifier(),
+    EmailNotifier(),
+    WhatsAppNotifier(),
+    TanpaKirim(),
+]
 
-# Eksperimen C: subclass lengkap berjalan normal
-transfer = TransferBank(saldo=500_000, bank="BCA")
-print("ID transaksi:", transfer.proses(150_000))
-print("Saldo sisa  :", transfer.saldo)
+for n in daftar:
+    cocok = isinstance(n, Notifier)
+    print(f"{type(n).__name__:<16} memenuhi Notifier? {cocok}")
