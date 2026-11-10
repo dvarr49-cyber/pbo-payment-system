@@ -1,18 +1,25 @@
-from core.protocols import Notifier
-from core.notifiers import ConsoleNotifier, EmailNotifier, WhatsAppNotifier
+from core.processor import PaymentProcessor
+from core.notifiers import ConsoleNotifier
+from plugins.transfer_bank import TransferBank
 
+# Membuat objek notifier
+notifier = ConsoleNotifier()
 
-class TanpaKirim:
-    """Kelas ini sengaja tidak punya method kirim()."""
+# Membuat payment processor
+processor = PaymentProcessor(notifier)
 
+# Membuat metode pembayaran
+transfer = TransferBank(saldo=500_000, bank="BCA")
 
-daftar = [
-    ConsoleNotifier(),
-    EmailNotifier(),
-    WhatsAppNotifier(),
-    TanpaKirim(),
-]
+# Memproses pembayaran
+print("=== PEMBAYARAN BERHASIL ===")
+processor.proses(transfer, 150_000, "Devar")
 
-for n in daftar:
-    cocok = isinstance(n, Notifier)
-    print(f"{type(n).__name__:<16} memenuhi Notifier? {cocok}")
+print("Saldo tersisa:", transfer.saldo)
+
+# Menguji pembayaran gagal
+print("\n=== PEMBAYARAN GAGAL ===")
+try:
+    processor.proses(transfer, 1_000_000, "Devar")
+except Exception as e:
+    print("Error:", e)
