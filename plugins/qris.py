@@ -13,5 +13,8 @@ class QRIS(PaymentMethod):
     def validasi(self, jumlah: float) -> bool:
         return jumlah <= self.BATAS_TRANSAKSI
 
+    def biaya_admin(self, jumlah: float) -> float:
+        return jumlah * 0.007
+
     def bayar(self, jumlah: float) -> str:
         return buat_id("QRS")

@@ -12,6 +12,9 @@ class TransferBank(PaymentMethod):
     def validasi(self, jumlah: float) -> bool:
         return self.saldo >= jumlah
 
+    def biaya_admin(self, jumlah: float) -> float:
+        return 2500
+
     def bayar(self, jumlah: float) -> str:
         self.saldo -= jumlah
         return buat_id("TRF")
